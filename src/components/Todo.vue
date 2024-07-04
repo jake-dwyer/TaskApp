@@ -9,14 +9,14 @@
     </tr>
   </thead>
   <tbody>
-    <tr v-for="(task, index) in filteredTasks" :key="index">
+    <tr v-for="task in filteredTasks" :key="task.id">
       <th style="width: 240px">
-        <span class="pointer" @click="editTask(index)">
+        <span class="pointer" @click="editTask(task)">
           {{ task.name }}
         </span>
       </th>
       <td style="width: 120px">
-        <span class="pointer" @click="updateStatus(index)">
+        <span class="pointer" @click="updateStatus(task)">
           <text :class="{'complete' : task.status === 'Complete',
                          'idle' : task.status === 'Idle',
                          'inProgress' : task.status === 'In progress'}">
@@ -25,7 +25,7 @@
         </span>
       </td>
       <td>
-        <div class="text-center" @click="deleteTask(index)">
+        <div class="text-center" @click="deleteTask(task)">
           <span class="fa fa-trash"></span>
         </div>
       </td>
@@ -41,6 +41,7 @@
 </div>
 </template>
 
+
 <script>
 export default {
   data() {
@@ -49,20 +50,21 @@ export default {
       editedTask: null,
       selectedStatus: '',
       statusOptions: ['Idle', 'In progress', 'Complete'],
-      tasks: [
-        {
-          name: 'Take bo for walk',
-          status: 'Idle'
-        },
-        {
-          name: 'Create todo app',
-          status: 'Complete'
-        },
-        {
-          name: 'Create Views',
-          status: 'In progress'
-        },
-      ]
+      taskCount: 0,
+      tasks: []
+    }
+  },
+
+  created() {
+    this.tasks = JSON.parse(localStorage.getItem('tasks')) || [];  
+  },
+
+  watch: {
+    tasks: {
+      handler(newTasks) {
+        localStorage.setItem('tasks', JSON.stringify(newTasks));
+      },
+      deep: true
     }
   },
 
@@ -81,37 +83,41 @@ export default {
 
   methods: {
     submit() {
-      if(this.task.trim().length === 0) return;
+      if (this.task.trim().length === 0) return;
 
-      if(this.editedTask === null) {
-        this.tasks.push( {
+      if (this.editedTask === null) {
+        this.tasks.push({
+          id: ++this.taskCount,
           name: this.task.trim(),
           status: 'Idle'
         });
       } else {
-        this.tasks[this.editedTask].name = this.task.trim();
+        const task = this.tasks.find(t => t.id === this.editedTask.id);
+        if (task) task.name = this.task.trim();
         this.editedTask = null;
       }
 
-      this.task = ''
-      console.log(this.tasks);
+      this.task = '';
     },
 
-    deleteTask(index) {
-      this.tasks.splice(index, 1);
-      console.log(this.tasks);
+    deleteTask(toDelete) {
+      this.tasks = this.tasks.filter(task => task.id !== toDelete.id);
     },
 
-    editTask(index) {
-      this.task = this.tasks[index].name;
-      this.editedTask = index;
+    editTask(toEdit) {
+      this.task = toEdit.name;
+      this.editedTask = toEdit;
     },
 
-    updateStatus(index) {
-      let newIndex = this.statusOptions.indexOf(this.tasks[index].status);
-      if (++newIndex > 2) newIndex = 0;
-      this.tasks[index].status = this.statusOptions[newIndex];
-    },
+    updateStatus(toUpdate) {
+    let task = this.tasks.find(t => t.id === toUpdate.id);
+    if (task) {
+    let newIndex = this.statusOptions.indexOf(task.status);
+    newIndex = (newIndex + 1) % this.statusOptions.length;
+    task.status = this.statusOptions[newIndex];
+    console.log(`Updated Status of task: ${task.name} to status of: ${task.status}`);
+  }
+},
   }
 };
 </script>
