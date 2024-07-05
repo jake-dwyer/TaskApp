@@ -1,4 +1,5 @@
 <template>
+  <!-- Render the TodoView component with a 'Complete' statusFilter prop, meaning it will show completed tasks -->
   <todo-view :statusFilter="'Complete'" />
 </template>
 

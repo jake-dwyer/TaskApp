@@ -1,4 +1,5 @@
 <template>
+<!-- View Options -->
     <nav class="navbar">
       <ul class="nav">
         <li class="nav-item">
