@@ -19,14 +19,14 @@
           {{ task.name }}
         </span>
       </th>
-      <td style="width: 120px">
+      <td style="width: 124px">
         <!-- On task status click call updateStatus -->
         <span class="pointer" @click="updateStatus(task)">
           <!-- Realistically <text> should be changed. -->
           <!-- Categorizing status based on task.status. If task.status is 'InProgress', then we render 'In progress'. -->
-          <text :class="{'complete' : task.status === 'Complete',
-                         'idle' : task.status === 'Idle',
-                         'inProgress' : task.status === 'In progress'}">
+          <text :class="{'complete' : task.status === '⦁︎ Complete',
+                         'idle' : task.status === '⦁︎ Idle',
+                         'inProgress' : task.status === '⦁︎ In progress'}">
             {{ task.status }}
           </text>
         </span>
@@ -61,7 +61,7 @@ export default {
       editedTask: null,
       // On click of created task status, we increment to the following task based on index in the 'statusOptions' array.
       selectedStatus: '',
-      statusOptions: ['Idle', 'In progress', 'Complete'],
+      statusOptions: ['⦁︎ Idle', '⦁︎ In progress', '⦁︎ Complete'],
       // Instead of selecting tasks by index, we assign it an 'id' based on when it is created. 
       taskCount: 0,
       tasks: []
@@ -74,18 +74,17 @@ export default {
     this.taskCount = localStorage.getItem('taskCount') || 0;
   },
 
-  watch: {
-    tasks: {
-      handler(newTasks) {
-        localStorage.setItem('tasks', JSON.stringify(newTasks));
-      },
-      deep: true
+watch: {
+  tasks: {
+    handler(newTasks) {
+      localStorage.setItem('tasks', JSON.stringify(newTasks));
     },
-    // Add this watcher for taskCount
-    taskCount(newCount) {
-      localStorage.setItem('taskCount', newCount.toString());
-    }
+    deep: true
   },
+  taskCount(newCount) {
+    localStorage.setItem('taskCount', newCount.toString());
+  }
+},
 
   props: {
     // Used to filter tasks, expects a string. 
@@ -114,7 +113,7 @@ export default {
         this.tasks.push({
           id: ++this.taskCount,
           name: this.task.trim(),
-          status: 'Idle'
+          status: '⦁︎ Idle'
         });
 
         // If the user clicks on an existing task, we instead find the task they are looking to edit and change the name based on input.
@@ -162,8 +161,30 @@ export default {
 
 .labels {
   color: var(--text-secondary);
+  font-family: 'Helvetica Neue';
   font-size: 14px;
   font-weight: 500;
+}
+
+.idle {
+  color: var(--text-idle);
+  padding: 1.5px 4px 1.5px 4px;
+  background-color: var(--highlight-idle);
+  border-radius: 4px
+}
+
+.inProgress {
+  color: var(--text-progress);
+  padding: 1.5px 4px 1.5px 4px;
+  background-color: var(--highlight-progress);
+  border-radius: 4px
+}
+
+.complete {
+  color: var(--text-complete);
+  padding: 1.5px 4px 1.5px 4px;
+  background-color: var(--highlight-complete);
+  border-radius: 4px
 }
 
 .textField {
@@ -175,7 +196,6 @@ input {
   border: none;
   transition: none;
   background-color: none;
-  font-weight: 500
 }
 
 input:focus {
@@ -185,7 +205,7 @@ input:focus {
 
 input::placeholder {
     color: var(--text-CTA);
-    font-weight: 600
+    font-weight: 500
 }
 
 .pointer {
