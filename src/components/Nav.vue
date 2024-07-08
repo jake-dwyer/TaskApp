@@ -3,23 +3,28 @@
     <nav class="navbar">
       <ul class="nav">
         <li class="nav-item">
-          <router-link to="/" class="nav-link">All tasks</router-link>
+          <!-- Router link has an active class property. -->
+          <router-link to="/" class="nav-link" active-class="active-link">All tasks</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/in-progress" class="nav-link">In progress</router-link>
+          <router-link to="/in-progress" class="nav-link" active-class="active-link">In progress</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/complete" class="nav-link">Complete</router-link>
+          <router-link to="/complete" class="nav-link" active-class="active-link">Complete</router-link>
         </li>
       </ul>
     </nav>
 </template>
 
 <style scoped>
+li {
+  display: inline;
+}
+
 .navbar {
   display: flex;
   margin-left: 6.5rem;
-}
+  }
 
 .nav {
   list-style-type: none;
@@ -33,11 +38,14 @@
 }
 
 .nav-link {
-  font-family: 'Helvetica Neue';
   text-decoration: none;
   color: var(--text-secondary);
   cursor: pointer;
   font-size: 16px;
-  font-weight: 500;
+  }
+
+.active-link {
+  color: var(--text-primary);
+  font-weight: 600;
 }
 </style>

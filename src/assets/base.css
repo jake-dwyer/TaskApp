@@ -16,14 +16,9 @@
   --text-complete: #1D3829;
 
   --text-CTA: #2483E2;
-}
 
-/* semantic color variables for this project */
-:root {
   --color-background: var(white);
-
   --color-border: var(--divider-gray);
-
   --color-heading: var(--text-primary);
 }
 
@@ -41,35 +36,29 @@
   }
 } */
 
+@font-face {
+  font-family: 'SF Pro';
+  src: url(../assets/SF-Pro.ttf);
+}
+
+/* Global Styling */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
   margin: 0;
-  font-weight: normal;
+  padding: 0;
+  font-weight: 500;
+  font-family: 'SF Pro';
+  letter-spacing: -.4px;
 }
 
 body {
   min-height: 100vh;
-  color: var(--color-text);
+  color: var(--color-text, var(--text-secondary));
   background: var(--color-background);
-  transition:
-    color 0.5s,
-    background-color 0.5s;
+  transition: color 0.5s, background-color 0.5s;
   line-height: 1.5;
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
-    sans-serif;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

@@ -21,8 +21,16 @@ defineProps({
 .heading {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
     margin-top:  3.75rem;
     margin-left: 7.5rem;
 }
+
+h1 {
+  color: var(--text-primary);
+  font-size: 32px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
 </style>
