@@ -71,15 +71,19 @@ export default {
   created() {
     // Initialize the tasks array by loading saved tasks from localStorage, or set to an empty array if no tasks are found.
     this.tasks = JSON.parse(localStorage.getItem('tasks')) || [];  
+    this.taskCount = localStorage.getItem('taskCount') || 0;
   },
 
   watch: {
     tasks: {
-      // Watch for changes in the tasks array. When tasks are added, removed, or edited, update localStorage.
       handler(newTasks) {
         localStorage.setItem('tasks', JSON.stringify(newTasks));
       },
       deep: true
+    },
+    // Add this watcher for taskCount
+    taskCount(newCount) {
+      localStorage.setItem('taskCount', newCount.toString());
     }
   },
 
@@ -158,7 +162,6 @@ export default {
 
 .labels {
   color: var(--text-secondary);
-  font-family: 'Helvetica Neue';
   font-size: 14px;
   font-weight: 500;
 }
@@ -172,6 +175,7 @@ input {
   border: none;
   transition: none;
   background-color: none;
+  font-weight: 500
 }
 
 input:focus {
@@ -181,8 +185,7 @@ input:focus {
 
 input::placeholder {
     color: var(--text-CTA);
-    font-family: 'Helvetica Neue';
-    font-weight: 500
+    font-weight: 600
 }
 
 .pointer {
