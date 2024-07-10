@@ -17,7 +17,7 @@
 
   --text-CTA: #2483E2;
 
-  --color-background: var(white);
+  --color-background: #fff;
   --color-border: var(--divider-gray);
   --color-heading: var(--text-primary);
 }
@@ -62,4 +62,11 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+h1 {
+  color: var(--text-primary);
+  font-size: 32px;
+  font-weight: 600;
+  margin-top: 6px;
 }

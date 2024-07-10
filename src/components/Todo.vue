@@ -7,6 +7,7 @@
     <!-- Column Heads -->
       <th scope="col" class="labels">Task</th>
       <th scope="col" class="labels">Status</th>
+      <th scope="col" class="labels">Due</th>
       <th scope="col" class="labels text-center">#</th>
     </tr>
   </thead>
@@ -19,7 +20,7 @@
           {{ task.name }}
         </span>
       </th>
-      <td style="width: 124px">
+      <td style="width: 240px">
         <!-- On task status click call updateStatus -->
         <span class="pointer" @click="updateStatus(task)">
           <!-- Realistically <text> should be changed. -->
@@ -31,7 +32,12 @@
           </text>
         </span>
       </td>
-      <td>
+      <td style="width: 240px">
+        <span>
+        {{ task.dueDate }}
+        </span>
+      </td>
+      <td style="width: 120px">
         <!-- On Trash icon click call delete task. -->
         <div class="text-center" @click="deleteTask(task)">
           <span class="fa fa-trash"></span>
@@ -45,18 +51,27 @@
 <div class="textField">
   <div class="d-flex">
     <!-- Binds the input to the 'task' data property. On Enter key press, call submit. -->
-    <input v-model="task" type="text" placeholder="+ Create a new task" class="form-control" @keyup.enter="submit">
+    <button @click="showModal = true">+ Create a new task</button>
+    <create-task :isVisible="showModal" @update:isVisible="showModal = $event"></create-task>
   </div>
 </div>
 </template>
 
 
 <script>
+import CreateTask from './CreateTask.vue'
+
 export default {
+  components: {
+    CreateTask
+  },
   // Define data properties
   data() {
     return {
+      showModal: false,
       task: '',
+      description: '',
+      dueDate: '',
       // On click of a created task name, this will populate to modify the task name. 
       editedTask: null,
       // On click of created task status, we increment to the following task based on index in the 'statusOptions' array.
@@ -192,20 +207,11 @@ watch: {
   margin-right: 8.75rem;
 }
 
-input {
+button {
+  color: var(--text-CTA);
+  font-weight: 600;
+  background-color: #fff;
   border: none;
-  transition: none;
-  background-color: none;
-}
-
-input:focus {
-  border-color: none;
-  box-shadow: none;
-}
-
-input::placeholder {
-    color: var(--text-CTA);
-    font-weight: 500
 }
 
 .pointer {
