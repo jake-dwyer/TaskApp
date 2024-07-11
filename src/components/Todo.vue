@@ -52,7 +52,7 @@
   <div class="d-flex">
     <!-- Binds the input to the 'task' data property. On Enter key press, call submit. -->
     <button @click="showModal = true">+ Create a new task</button>
-    <create-task :isVisible="showModal" @update:isVisible="showModal = $event"></create-task>
+    <create-task :isVisible="showModal" @update:isVisible="showModal = $event" @task-created="addTask"></create-task>
   </div>
 </div>
 </template>
@@ -69,17 +69,8 @@ export default {
   data() {
     return {
       showModal: false,
-      task: '',
-      description: '',
-      dueDate: '',
-      // On click of a created task name, this will populate to modify the task name. 
-      editedTask: null,
-      // On click of created task status, we increment to the following task based on index in the 'statusOptions' array.
-      selectedStatus: '',
+      tasks: [],
       statusOptions: ['⦁︎ Idle', '⦁︎ In progress', '⦁︎ Complete'],
-      // Instead of selecting tasks by index, we assign it an 'id' based on when it is created. 
-      taskCount: 0,
-      tasks: []
     }
   },
 
@@ -119,26 +110,9 @@ watch: {
   },
 
   methods: {
-    submit() {
-      // If there is no input return nothing.
-      if (this.task.trim().length === 0) return;
-
-      // If the user is not editing a task, create a new task, increment the counter and set the status to idle by default. 
-      if (this.editedTask === null) {
-        this.tasks.push({
-          id: ++this.taskCount,
-          name: this.task.trim(),
-          status: '⦁︎ Idle'
-        });
-
-        // If the user clicks on an existing task, we instead find the task they are looking to edit and change the name based on input.
-      } else {
-        const task = this.tasks.find(t => t.id === this.editedTask.id);
-        if (task) task.name = this.task.trim();
-        this.editedTask = null;
-      }
-
-      this.task = '';
+    addTask(newTask) {
+      this.tasks.push(newTask);
+      console.log(this.tasks);
     },
 
     // Find the task by task.id and filter it out. 

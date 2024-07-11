@@ -3,8 +3,8 @@
     <div class="modalContent" @click.stop>
         <form @submit.prevent="submitTask">
             <h1>Create a new task</h1>
-            <input v-model="task" placeholder="* Enter task name" class="form-control" required>
-            <textarea v-model="description" placeholder="Describe your task" class="form-control"></textarea>
+            <input v-model="taskName" placeholder="* Enter task name" class="form-control" required>
+            <textarea v-model="taskDescription" placeholder="Describe your task" class="form-control"></textarea>
             <input type="date" v-model="taskDueDate" class="calendar">
             <button type="submit">Create Task</button>
         </form>
@@ -14,6 +14,16 @@
 
 <script>
 export default {
+    data() {
+        return {
+        taskName: '',
+        taskDescription: '',
+        taskDueDate: '',
+        taskCount: 0,
+        tasks: []
+        }
+    },
+
     props: {
         isVisible: {
             type: Boolean,
@@ -22,10 +32,26 @@ export default {
     },
     methods: {
         closeModal() {
-            console.log('closeModal called');
             this.$emit('update:isVisible', false);
         },
         submitTask() {
+            console.log('Submitting task:', this.taskName, this.taskDescription, this.taskDueDate);
+
+            if (this.taskName.trim().length === 0) return;
+
+            const task = {
+                id: ++this.taskCount,
+                name: this.taskName.trim(),
+                description: this.taskDescription.trim(),
+                dueDate: this.taskDueDate,
+                status: '⦁︎ Idle'
+            };
+
+            this.$emit('task-created', task);
+
+            this.taskName = '';
+            this.taskDescription = '';
+            this.taskDueDate = '';
             this.closeModal();
         }
     }
