@@ -52,7 +52,7 @@
   <div class="d-flex">
     <!-- Binds the input to the 'task' data property. On Enter key press, call submit. -->
     <button @click="showModal = true">+ Create a new task</button>
-    <create-task :isVisible="showModal" @update:isVisible="showModal = $event" @task-created="addTask"></create-task>
+    <create-task :isVisible="showModal" :taskCount="taskCount" @update:isVisible="showModal = $event" @task-created="addTask"></create-task>
   </div>
 </div>
 </template>
@@ -70,6 +70,7 @@ export default {
     return {
       showModal: false,
       tasks: [],
+      taskCount: 0,
       statusOptions: ['⦁︎ Idle', '⦁︎ In progress', '⦁︎ Complete'],
     }
   },
@@ -77,7 +78,7 @@ export default {
   created() {
     // Initialize the tasks array by loading saved tasks from localStorage, or set to an empty array if no tasks are found.
     this.tasks = JSON.parse(localStorage.getItem('tasks')) || [];  
-    this.taskCount = localStorage.getItem('taskCount') || 0;
+    this.taskCount = Number(localStorage.getItem('taskCount')) || 0;
   },
 
 watch: {
@@ -98,21 +99,29 @@ watch: {
   },
   
   computed: {
-    // A computed property that filters the tasks based on the statusFilter prop.
-    // If a statusFilter is provided, it returns only the tasks that match the filter.
-    // If no statusFilter is provided, it returns all tasks.
-    filteredTasks() {
-      if (this.statusFilter) {
-        return this.tasks.filter(task => task.status === this.statusFilter);
+      filteredTasks() {
+          console.log("Current filter:", this.statusFilter);
+          console.log("Tasks for filtering:", this.tasks.map(task => task.status));
+
+          // Check if statusFilter is empty and return all tasks if true
+          if (!this.statusFilter) {
+              return this.tasks;
+          }
+
+          // Otherwise, apply the filter considering special characters
+          return this.tasks.filter(task =>
+              task.status.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() ===
+              this.statusFilter.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()
+          );
       }
-      return this.tasks;
-    }
   },
 
+
   methods: {
-    addTask(newTask) {
-      this.tasks.push(newTask);
-      console.log(this.tasks);
+    addTask(newTask, newTaskCount) {
+        this.tasks.push(newTask);
+        this.taskCount = newTaskCount;
+        console.log(this.tasks);
     },
 
     // Find the task by task.id and filter it out. 

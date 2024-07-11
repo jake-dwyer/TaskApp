@@ -12,6 +12,9 @@
         <li class="nav-item">
           <router-link to="/complete" class="nav-link" active-class="active-link">Complete</router-link>
         </li>
+        <li class="nav-item">
+          <router-link to="/settings" class="nav-link" active-class="active-link">Settings</router-link>
+        </li>
       </ul>
     </nav>
 </template>

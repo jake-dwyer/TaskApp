@@ -19,7 +19,6 @@ export default {
         taskName: '',
         taskDescription: '',
         taskDueDate: '',
-        taskCount: 0,
         tasks: []
         }
     },
@@ -28,27 +27,28 @@ export default {
         isVisible: {
             type: Boolean,
             default: false
+        },
+        taskCount: {
+            type: Number,
+            required: true
         }
     },
+
     methods: {
         closeModal() {
             this.$emit('update:isVisible', false);
         },
         submitTask() {
-            console.log('Submitting task:', this.taskName, this.taskDescription, this.taskDueDate);
-
-            if (this.taskName.trim().length === 0) return;
-
+            const newId = this.taskCount + 1;
             const task = {
-                id: ++this.taskCount,
+                id: newId,
                 name: this.taskName.trim(),
                 description: this.taskDescription.trim(),
                 dueDate: this.taskDueDate,
                 status: '⦁︎ Idle'
             };
 
-            this.$emit('task-created', task);
-
+            this.$emit('task-created', task, newId);
             this.taskName = '';
             this.taskDescription = '';
             this.taskDueDate = '';
