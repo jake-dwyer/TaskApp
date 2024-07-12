@@ -1,15 +1,22 @@
-<script setup>
-import Title from './components/Title.vue'
-import Nav from './components/Nav.vue'
-import ToDoApp from './components/Todo.vue'
-</script>
-
 <template>
-  <header>
-    <Title msg="Todo" />
-  </header>
-  <Nav />
-  <!-- Rendering the router-view component to display the matched component for the current route.
-    The :key attribute forces the view to re-render when the route changes. -->
-  <router-view :key="$route.fullPath" />
+  <div :class="$store.state.theme">
+    <header>
+      <Title msg="To-do" />
+    </header>
+    <Nav />
+    <router-view :key="$route.fullPath" />
+  </div>
 </template>
+
+<script setup>
+import { onMounted } from 'vue';
+import { useStore } from 'vuex';
+import Title from './components/Title.vue';
+import Nav from './components/Nav.vue';
+
+const store = useStore();
+
+onMounted(() => {
+  store.dispatch('initializeTheme');
+});
+</script>

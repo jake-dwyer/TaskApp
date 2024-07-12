@@ -20,6 +20,7 @@
 </template>
 
 <style scoped>
+@import '../assets/base.css';
 li {
   display: inline;
 }

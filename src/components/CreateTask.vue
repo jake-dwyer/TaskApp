@@ -13,7 +13,11 @@
 </template>
 
 <script>
+import DateMixin from '../mixins/dateMixin.js';
+
 export default {
+    mixins: [DateMixin],
+
     data() {
         return {
         taskName: '',
@@ -30,6 +34,7 @@ export default {
         },
         taskCount: {
             type: Number,
+            default: 0,
             required: true
         }
     },
@@ -54,7 +59,13 @@ export default {
             this.taskDueDate = '';
             this.closeModal();
         }
-    }
+    },
+
+    computed: {
+    formattedDueDate() {
+        return this.taskDueDate ? this.formatDate(this.taskDueDate) : '';
+        }
+    },
 };
 </script>
 

@@ -7,7 +7,7 @@
     <!-- Column Heads -->
       <th scope="col" class="labels">Task</th>
       <th scope="col" class="labels">Status</th>
-      <th scope="col" class="labels">Due</th>
+      <th scope="col" class="labels" @click="handleDueDateSort">Due</th>
       <th scope="col" class="labels text-center">#</th>
     </tr>
   </thead>
@@ -16,25 +16,23 @@
     <tr v-for="task in filteredTasks" :key="task.id">
       <th style="width: 240px">
         <!-- On task name click call editTask -->
-        <span class="pointer" @click="editTask(task)">
+        <span class="pointer">
           {{ task.name }}
         </span>
       </th>
       <td style="width: 240px">
-        <!-- On task status click call updateStatus -->
-        <span class="pointer" @click="updateStatus(task)">
-          <!-- Realistically <text> should be changed. -->
-          <!-- Categorizing status based on task.status. If task.status is 'InProgress', then we render 'In progress'. -->
-          <text :class="{'complete' : task.status === '⦁︎ Complete',
-                         'idle' : task.status === '⦁︎ Idle',
-                         'inProgress' : task.status === '⦁︎ In progress'}">
-            {{ task.status }}
-          </text>
-        </span>
+        <select v-model="task.status" @change="updateStatus(task)" 
+                  :class="{'complete' : task.status === '⦁︎ Complete',
+                          'idle' : task.status === '⦁︎ Idle',
+                          'inProgress' : task.status === '⦁︎ In progress'}">
+            <option value="⦁︎ Idle">⦁︎ Idle</option>
+            <option value="⦁︎ In progress">⦁︎ In progress</option>
+            <option value="⦁︎ Complete">⦁︎ Complete</option>
+        </select>
       </td>
       <td style="width: 240px">
-        <span>
-        {{ task.dueDate }}
+        <span class="dueDate">
+        {{ formatDate(task.dueDate) }}
         </span>
       </td>
       <td style="width: 120px">
@@ -50,7 +48,6 @@
 
 <div class="textField">
   <div class="d-flex">
-    <!-- Binds the input to the 'task' data property. On Enter key press, call submit. -->
     <button @click="showModal = true">+ Create a new task</button>
     <create-task :isVisible="showModal" :taskCount="taskCount" @update:isVisible="showModal = $event" @task-created="addTask"></create-task>
   </div>
@@ -59,99 +56,65 @@
 
 
 <script>
-import CreateTask from './CreateTask.vue'
+import { mapGetters, mapMutations, mapState } from 'vuex';
+import CreateTask from './CreateTask.vue';
+import DateMixin from '../mixins/dateMixin.js';
+import SortDueDate from '../mixins/sortDueDateMixin.js'
 
 export default {
+  mixins: [DateMixin, SortDueDate],
+
   components: {
     CreateTask
   },
-  // Define data properties
   data() {
     return {
       showModal: false,
-      tasks: [],
-      taskCount: 0,
-      statusOptions: ['⦁︎ Idle', '⦁︎ In progress', '⦁︎ Complete'],
-    }
+      dueDateFilter: '',
+      sortAscending: true
+    };
   },
-
-  created() {
-    // Initialize the tasks array by loading saved tasks from localStorage, or set to an empty array if no tasks are found.
-    this.tasks = JSON.parse(localStorage.getItem('tasks')) || [];  
-    this.taskCount = Number(localStorage.getItem('taskCount')) || 0;
-  },
-
-watch: {
-  tasks: {
-    handler(newTasks) {
-      localStorage.setItem('tasks', JSON.stringify(newTasks));
-    },
-    deep: true
-  },
-  taskCount(newCount) {
-    localStorage.setItem('taskCount', newCount.toString());
-  }
-},
-
   props: {
-    // Used to filter tasks, expects a string. 
     statusFilter: String
   },
-  
   computed: {
-      filteredTasks() {
-          console.log("Current filter:", this.statusFilter);
-          console.log("Tasks for filtering:", this.tasks.map(task => task.status));
-
-          // Check if statusFilter is empty and return all tasks if true
-          if (!this.statusFilter) {
-              return this.tasks;
-          }
-
-          // Otherwise, apply the filter considering special characters
-          return this.tasks.filter(task =>
-              task.status.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() ===
-              this.statusFilter.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()
-          );
-      }
+    ...mapState(['taskCount']),
+    filteredTasks() {
+      let tasks = this.$store.getters.filteredTasks(this.statusFilter);
+      return this.sortTasksByDueDate(tasks, this.sortAscending);
+    }
   },
-
-
   methods: {
-    addTask(newTask, newTaskCount) {
-        this.tasks.push(newTask);
-        this.taskCount = newTaskCount;
-        console.log(this.tasks);
+    ...mapMutations([
+      'addTask', 
+      'deleteTask',
+      'updateTaskStatus'
+    ]),
+    handleDueDateSort() {
+      this.sortedTasks = this.sortTasksByDueDate(this.sortedTasks);
     },
-
-    // Find the task by task.id and filter it out. 
-    deleteTask(toDelete) {
-      this.tasks = this.tasks.filter(task => task.id !== toDelete.id);
+    editTask(task) {
+      // Logic for editing a task
     },
-
-    // Edit the task by setting the input field to the task's name and setting the editedTask to the task to be edited.
-    editTask(toEdit) {
-      this.task = toEdit.name;
-      this.editedTask = toEdit;
+    updateStatus(task) {
+      this.updateTaskStatus({ taskId: task.id, newStatus: task.status });
+      this.$store.dispatch('saveTasks');
     },
-
-    // Update the status of the task by finding it and cycling to the next status in the statusOptions array.
-    // I would like to change this process to a dropdown instead. 
-    updateStatus(toUpdate) {
-    let task = this.tasks.find(t => t.id === toUpdate.id);
-    if (task) {
-    let newIndex = this.statusOptions.indexOf(task.status);
-    newIndex = (newIndex + 1) % this.statusOptions.length;
-    task.status = this.statusOptions[newIndex];
-    console.log(`Updated Status of task: ${task.name} to status of: ${task.status}`);
-  }
-},
+    getNextStatus(currentStatus) {
+      const statuses = ['⦁︎ Complete', '⦁︎ Idle', '⦁︎ In progress'];
+      let index = statuses.indexOf(currentStatus);
+      return statuses[(index + 1) % statuses.length];
+    }
+  },
+  mounted() {
+    this.$store.dispatch('fetchTasks');
+    console.log('Tasks to render:', this.filteredTasks);
   }
 };
 </script>
 
 <style scoped>
-
+@import '../assets/base.css';
 .tablePosition {
   margin-left: 8.75rem;
   margin-right: 8.75rem;
@@ -164,25 +127,33 @@ watch: {
   font-weight: 500;
 }
 
+select {
+  appearance: none;
+  border: none;
+  border-radius: 4px;
+  padding: 1.5px 4px 1.5px 4px;
+  font-size: 14px;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+
 .idle {
   color: var(--text-idle);
-  padding: 1.5px 4px 1.5px 4px;
   background-color: var(--highlight-idle);
-  border-radius: 4px
 }
 
 .inProgress {
   color: var(--text-progress);
-  padding: 1.5px 4px 1.5px 4px;
   background-color: var(--highlight-progress);
-  border-radius: 4px
 }
 
 .complete {
   color: var(--text-complete);
-  padding: 1.5px 4px 1.5px 4px;
   background-color: var(--highlight-complete);
-  border-radius: 4px
+}
+
+.dueDate {
+  font-size: 14px;
 }
 
 .textField {

@@ -18,6 +18,7 @@ defineProps({
 </script>
 
 <style scoped>
+@import '../assets/base.css';
 .heading {
     display: flex;
     align-items: center;
