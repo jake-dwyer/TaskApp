@@ -151,6 +151,11 @@ input[type="date"] {
     color: var(--color-text-primary);
 }
 
+input[type="date"]::placeholder {
+    color: var(--color-text-primary);
+    font-weight: 500;
+}
+
 input:focus, textarea:focus, input[type="date"]:focus {
     border-color: var(--color-text-CTA);
     box-shadow: none;
