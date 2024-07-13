@@ -28,7 +28,7 @@ defineProps({
 }
 
 h1 {
-    color: var(--text-primary);
+    color: var(--color-text-primary);
     font-size: 32px;
     font-weight: 600;
     margin-top: 6px;

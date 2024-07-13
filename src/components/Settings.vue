@@ -11,6 +11,7 @@ export default {
 
     function toggleTheme() {
       store.commit('toggleTheme');
+      document.body.style.backgroundColor = store.state.theme === 'dark' ? getComputedStyle(document.documentElement).getPropertyValue('--dark-background') : getComputedStyle(document.documentElement).getPropertyValue('--light-background');
     }
 
     return {

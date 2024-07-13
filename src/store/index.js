@@ -16,6 +16,7 @@ export default createStore({
             state.tasks.push(task);
         },
         deleteTask(state, taskId) {
+            console.log("Deleting task with ID:", taskId);
             state.tasks = state.tasks.filter(task => task.id !== taskId);
         },
         updateTaskStatus(state, { taskId, newStatus }) {
@@ -29,6 +30,7 @@ export default createStore({
         },
         setTheme(state, theme) {
             state.theme = theme;
+            document.body.style.backgroundColor = theme === 'dark' ? 'var(--dark-background)' : 'var(--light-background)';
         },
         toggleTheme(state) {
             state.theme = state.theme === 'light' ? 'dark' : 'light';

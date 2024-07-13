@@ -92,7 +92,7 @@ export default {
 }
 
 h1 {
-    color: var(--text-primary);
+    color: var(--color-text-primary);
     font-size: 32px;
     font-weight: 600;
     margin-top: 6px;
@@ -104,10 +104,10 @@ input {
     border-radius: 4px;
     font-size: 16px;
     padding: 8px;
-    border: 1px solid var(--divider-gray);
+    border: 1px solid var(--color-grid-lines);
     transition: .5s;
     background-color: none;
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
 }
 
 textarea {
@@ -117,35 +117,35 @@ textarea {
     border-radius: 4px;
     font-size: 16px;
     padding: 8px;
-    border: 1px solid var(--divider-gray);
+    border: 1px solid var(--color-grid-lines);
     transition: .5s;
     background-color: none;
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
 }
 
 input[type="date"] {
     border-radius: 4px;
     font-size: 16px;
     padding: 8px;
-    border: 1px solid var(--divider-gray);
+    border: 1px solid var(--color-grid-lines);
     transition: .5s;
     background-color: none;
 }
 
 input:focus, textarea:focus, input[type="date"]:focus {
-    border-color: var(--text-CTA);
+    border-color: var(--color-text-CTA);
     box-shadow: none;
 }
 
 button {
-    background-color: var(--text-CTA);
+    background-color: var(--color-text-CTA);
     margin-left: 16px;
     padding: 8px 20px 8px 20px;
     border-radius: 4px;
     font-size: 16px; 
     font-weight: 600;
     color: #fff;
-    border: 1px solid var(--text-CTA);
+    border: 1px solid var(--color-text-CTA);
 }
 
 </style>

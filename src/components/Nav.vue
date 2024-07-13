@@ -33,8 +33,8 @@ li {
 .nav {
   list-style-type: none;
   display: flex;
-  --bs-nav-link-color: var(--text-primary);
-  --bs-nav-link-hover-color: var(--text-primary);
+  --bs-nav-link-color: var(--color-text-primary);
+  --bs-nav-link-hover-color: var(--color-text-primary);
 }
 
 .nav-item {
@@ -43,13 +43,13 @@ li {
 
 .nav-link {
   text-decoration: none;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   cursor: pointer;
   font-size: 16px;
   }
 
 .active-link {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   font-weight: 600;
 }
 </style>

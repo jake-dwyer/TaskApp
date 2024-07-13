@@ -8,12 +8,12 @@
       <th scope="col" class="labels">Task</th>
       <th scope="col" class="labels">Status</th>
       <th scope="col" class="labels" @click="handleDueDateSort">Due</th>
-      <th scope="col" class="labels text-center">#</th>
+      <th scope="col" class="labels text-center"></th>
     </tr>
   </thead>
   <tbody>
     <!-- For loop to render taks in table based on selected view. -->
-    <tr v-for="task in filteredTasks" :key="task.id">
+    <tr v-for="task in filteredTasks" :key="task.id" >
       <th style="width: 240px">
         <!-- On task name click call editTask -->
         <span class="pointer">
@@ -37,7 +37,7 @@
       </td>
       <td style="width: 120px">
         <!-- On Trash icon click call delete task. -->
-        <div class="text-center" @click="deleteTask(task)">
+        <div class="text-center" @click="deleteTask(task.id)">
           <span class="fa fa-trash"></span>
         </div>
       </td>
@@ -120,11 +120,25 @@ export default {
   margin-right: 8.75rem;
 }
 
+.table {
+  background-color: var(--color-background);
+  border-color: var(--color-grid-lines);
+}
+
+.table th, .table td {
+  background-color: inherit;
+  border-color: var(--color-grid-lines);
+}
+
 .labels {
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   font-family: 'Helvetica Neue';
   font-size: 14px;
   font-weight: 500;
+}
+
+span {
+  color: var(--color-text-primary);
 }
 
 select {
@@ -138,18 +152,18 @@ select {
 }
 
 .idle {
-  color: var(--text-idle);
-  background-color: var(--highlight-idle);
+  color: var(--color-text-idle);
+  background-color: var(--color-highlight-idle);
 }
 
 .inProgress {
-  color: var(--text-progress);
-  background-color: var(--highlight-progress);
+  color: var(--color-text-progress);
+  background-color: var(--color-highlight-progress);
 }
 
 .complete {
-  color: var(--text-complete);
-  background-color: var(--highlight-complete);
+  color: var(--color-text-complete);
+  background-color: var(--color-highlight-complete);
 }
 
 .dueDate {
@@ -162,9 +176,9 @@ select {
 }
 
 button {
-  color: var(--text-CTA);
+  color: var(--color-text-CTA);
   font-weight: 600;
-  background-color: #fff;
+  background-color: var(--color-background);
   border: none;
 }
 
