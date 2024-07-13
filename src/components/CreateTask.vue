@@ -5,8 +5,10 @@
             <h1>Create a new task</h1>
             <input v-model="taskName" placeholder="* Enter task name" class="form-control" required>
             <textarea v-model="taskDescription" placeholder="Describe your task" class="form-control"></textarea>
-            <input type="date" v-model="taskDueDate" class="calendar">
-            <button type="submit">Create Task</button>
+            <div class="foot">
+                <input type="date" v-model="taskDueDate" class="calendar">
+                <button type="submit">Create Task</button>
+            </div>
         </form>
     </div>
 </div>
@@ -142,18 +144,23 @@ textarea::placeholder {
 }
 
 input[type="date"] {
-    border-radius: 4px;
-    font-size: 16px;
-    padding: 8px;
+    -webkit-appearance: textField;
+    -moz-appearance: textfield;
+    background: transparent;
     border: 1px solid var(--color-grid-lines);
-    transition: .5s;
-    background-color: var(--color-background);
+    border-radius: 4px;
+    padding: 12px;
+    font-size: 16px;
     color: var(--color-text-primary);
 }
 
 input[type="date"]::placeholder {
     color: var(--color-text-primary);
     font-weight: 500;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    color: var(--color-text-primary);
 }
 
 input:focus, textarea:focus, input[type="date"]:focus {
@@ -174,8 +181,11 @@ button {
     border: 1px solid var(--color-text-CTA);
 }
 
+.foot {
+    margin-top: 8px;
+}
 /* Mobile-specific styles */
-@media (max-width: 768px) {
+@media (max-width: 776px) {
     .modalContent {
         margin: 10% auto;
         padding: 20px;
@@ -193,6 +203,7 @@ button {
 
     button {
         font-size: 14px; 
+        padding: 12px 16px;
         font-weight: 500;
     }
 }
