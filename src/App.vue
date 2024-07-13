@@ -17,6 +17,7 @@ import Nav from './components/Nav.vue';
 const store = useStore();
 
 onMounted(() => {
-  store.dispatch('initializeTheme');
+  store.dispatch('initializeTheme');  
+  store.dispatch('fetchTasks');     
 });
 </script>

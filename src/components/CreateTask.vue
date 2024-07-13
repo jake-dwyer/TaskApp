@@ -70,6 +70,8 @@ export default {
 </script>
 
 <style scoped>
+@import '../assets/base.css';
+
 .modal {
     display: flex;
     position: fixed;
@@ -80,14 +82,18 @@ export default {
     height: 100%;
     overflow: auto;
     background-color: rgba(0,0,0,0.4);
+    align-items: center;
+    justify-content: center;
 }
 
 .modalContent {
     background-color: var(--color-background);
-    margin: 15% auto;
     padding: 40px;
-    width: 80%;
-    border: none;
+    width: 500px; 
+    max-width: 90%;
+    min-width: 300px;
+    height: auto;
+    border: var(--color-grid-lines);
     border-radius: 8px;
 }
 
@@ -106,21 +112,33 @@ input {
     padding: 8px;
     border: 1px solid var(--color-grid-lines);
     transition: .5s;
-    background-color: none;
-    color: var(--color-text-secondary);
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    font-weight: 500;
+}
+
+input::placeholder {
+    color: var(--color-text-primary);
+    font-weight: 500;
 }
 
 textarea {
-    min-height: 160px;
-    max-height: 300px;
+    max-height: 324px;
     margin-top: 16px;
     border-radius: 4px;
     font-size: 16px;
     padding: 8px;
     border: 1px solid var(--color-grid-lines);
     transition: .5s;
-    background-color: none;
-    color: var(--color-text-secondary);
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    resize: none;
+    font-weight: 500;
+}
+
+textarea::placeholder {
+    color: var(--color-text-primary);
+    font-weight: 500;
 }
 
 input[type="date"] {
@@ -129,12 +147,18 @@ input[type="date"] {
     padding: 8px;
     border: 1px solid var(--color-grid-lines);
     transition: .5s;
-    background-color: none;
+    background-color: var(--color-background);
 }
 
 input:focus, textarea:focus, input[type="date"]:focus {
     border-color: var(--color-text-CTA);
     box-shadow: none;
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+}
+
+textarea {
+    height: 480px;
 }
 
 button {
@@ -148,4 +172,26 @@ button {
     border: 1px solid var(--color-text-CTA);
 }
 
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+    .modalContent {
+        margin: 10% auto;
+        padding: 20px;
+        width: 90%; 
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    input, textarea, input[type="date"] {
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    button {
+        padding: 12px 24px;
+        font-size: 14px; 
+    }
+}
 </style>

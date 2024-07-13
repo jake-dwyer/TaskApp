@@ -14,10 +14,12 @@ export default createStore({
             state.taskCount++;
             task.id = state.taskCount; // Ensuring each task gets a unique ID
             state.tasks.push(task);
+            localStorage.setItem('tasks', JSON.stringify(state.tasks));
         },
         deleteTask(state, taskId) {
             console.log("Deleting task with ID:", taskId);
             state.tasks = state.tasks.filter(task => task.id !== taskId);
+            localStorage.setItem('tasks', JSON.stringify(state.tasks));
         },
         updateTaskStatus(state, { taskId, newStatus }) {
             const task = state.tasks.find(task => task.id === taskId);
@@ -51,6 +53,12 @@ export default createStore({
         },
         saveTasks({ state }) {
             localStorage.setItem('tasks', JSON.stringify(state.tasks));
+        },
+        initializeTasks(state) {
+            let tasks = localStorage.getItem('tasks');
+            if (tasks) {
+                state.tasks = JSON.parse(tasks);
+            }
         },
         initializeTheme({ commit }) {
             const savedTheme = localStorage.getItem('theme') || 'light';

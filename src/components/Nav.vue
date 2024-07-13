@@ -52,4 +52,25 @@ li {
   color: var(--color-text-primary);
   font-weight: 600;
 }
+
+@media (max-width: 768px) {
+  .navbar {
+    margin-left: 0;
+    justify-content: center;
+  }
+
+  .nav {
+    flex-direction: flex;
+    align-items: center; 
+  }
+
+  .nav-item {
+    margin: 0.5rem 0; 
+  }
+
+  .nav-link {
+    font-size: 14px;
+    padding: 1rem; 
+  }
+}
 </style>

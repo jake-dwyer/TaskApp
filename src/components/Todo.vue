@@ -77,6 +77,11 @@ export default {
   props: {
     statusFilter: String
   },
+  watch: {
+    taskCount(newCount) {
+      localStorage.setItem('taskCount', newCount.toString());
+    }
+  },
   computed: {
     ...mapState(['taskCount']),
     filteredTasks() {
@@ -109,12 +114,13 @@ export default {
   mounted() {
     this.$store.dispatch('fetchTasks');
     console.log('Tasks to render:', this.filteredTasks);
-  }
+  },
 };
 </script>
 
 <style scoped>
 @import '../assets/base.css';
+
 .tablePosition {
   margin-left: 8.75rem;
   margin-right: 8.75rem;
@@ -184,5 +190,33 @@ button {
 
 .pointer {
   cursor: pointer;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 776px) {
+  .tablePosition {
+    margin: 1rem;
+  }
+
+  .table, .table th, .table td {
+    font-size: 14px;
+  }
+
+  .labels {
+    font-size: 12px;
+  }
+
+  .textField, .table {
+    margin-left: 1rem; 
+    margin-right: 1rem;
+  }
+
+  button {
+    padding: 12px 24px;
+  }
+
+  select {
+    padding: 1.5px 4px 1.5px 4px;
+  }
 }
 </style>
