@@ -67,6 +67,7 @@ export default {
   components: {
     CreateTask
   },
+
   data() {
     return {
       showModal: false,
@@ -74,14 +75,17 @@ export default {
       sortAscending: true
     };
   },
+
   props: {
     statusFilter: String
   },
+
   watch: {
     taskCount(newCount) {
       localStorage.setItem('taskCount', newCount.toString());
     }
   },
+
   computed: {
     ...mapState(['taskCount']),
     filteredTasks() {
@@ -89,6 +93,7 @@ export default {
       return this.sortTasksByDueDate(tasks, this.sortAscending);
     }
   },
+
   methods: {
     ...mapMutations([
       'addTask', 
@@ -111,10 +116,11 @@ export default {
       return statuses[(index + 1) % statuses.length];
     }
   },
+
   mounted() {
     this.$store.dispatch('fetchTasks');
     console.log('Tasks to render:', this.filteredTasks);
-  },
+  }
 };
 </script>
 

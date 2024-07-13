@@ -146,6 +146,7 @@ textarea::placeholder {
 input[type="date"] {
     -webkit-appearance: textField;
     -moz-appearance: textfield;
+    min-width: 100px;
     background: transparent;
     border: 1px solid var(--color-grid-lines);
     border-radius: 4px;
@@ -184,7 +185,7 @@ button {
 .foot {
     margin-top: 8px;
 }
-/* Mobile-specific styles */
+
 @media (max-width: 776px) {
     .modalContent {
         margin: 10% auto;
