@@ -123,7 +123,7 @@ input::placeholder {
 }
 
 textarea {
-    max-height: 324px;
+    height: 360px;
     margin-top: 16px;
     border-radius: 4px;
     font-size: 16px;
@@ -148,6 +148,7 @@ input[type="date"] {
     border: 1px solid var(--color-grid-lines);
     transition: .5s;
     background-color: var(--color-background);
+    color: var(--color-text-primary);
 }
 
 input:focus, textarea:focus, input[type="date"]:focus {
@@ -155,10 +156,6 @@ input:focus, textarea:focus, input[type="date"]:focus {
     box-shadow: none;
     background-color: var(--color-background);
     color: var(--color-text-primary);
-}
-
-textarea {
-    height: 480px;
 }
 
 button {
@@ -190,8 +187,8 @@ button {
     }
 
     button {
-        padding: 12px 24px;
         font-size: 14px; 
+        font-weight: 500;
     }
 }
 </style>

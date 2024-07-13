@@ -72,5 +72,8 @@ li {
     font-size: 14px;
     padding: 1rem; 
   }
+  .active-link {
+  font-weight: 500;
+  }
 }
 </style>

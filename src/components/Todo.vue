@@ -192,10 +192,10 @@ button {
   cursor: pointer;
 }
 
-/* Mobile-specific styles */
 @media (max-width: 776px) {
   .tablePosition {
-    margin: 1rem;
+    max-width: 90%;
+    margin: auto;
   }
 
   .table, .table th, .table td {
@@ -206,13 +206,14 @@ button {
     font-size: 12px;
   }
 
-  .textField, .table {
+  .textField {
     margin-left: 1rem; 
     margin-right: 1rem;
   }
 
   button {
     padding: 12px 24px;
+    font-weight: 500;
   }
 
   select {
