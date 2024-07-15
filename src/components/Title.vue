@@ -33,4 +33,17 @@ h1 {
     font-weight: 600;
     margin-top: 6px;
   }
+
+@media (max-width: 768px) {
+    .heading {
+        margin-left: 0;
+        justify-content: center;
+        margin-top: 2rem; 
+    }
+
+    h1 {
+        font-size: 28px;
+        text-align: center;
+    }
+}
 </style>

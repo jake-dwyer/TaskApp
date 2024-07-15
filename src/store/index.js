@@ -21,6 +21,15 @@ export default createStore({
             state.tasks = state.tasks.filter(task => task.id !== taskId);
             localStorage.setItem('tasks', JSON.stringify(state.tasks));
         },
+        updateTask(state, updatedTask) {
+            const index = state.tasks.findIndex(task => task.id === updatedTask.id);
+            if (index !== -1) {
+                state.tasks.splice(index, 1, updatedTask);
+                localStorage.setItem('tasks', JSON.stringify(state.tasks));
+            } else {
+                console.log("Task not found for update:", updatedTask.id);
+            }
+        },
         updateTaskStatus(state, { taskId, newStatus }) {
             const task = state.tasks.find(task => task.id === taskId);
             if (task) {

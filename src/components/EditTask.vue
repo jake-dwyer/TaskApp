@@ -2,12 +2,12 @@
 <div v-if="isVisible" class="modal" @click="closeModal">
     <div class="modalContent" @click.stop>
         <form @submit.prevent="submitTask">
-            <h1>Create a new task</h1>
+            <h1>Edit Task</h1>
             <input v-model="taskName" placeholder="* Enter task name" class="form-control" required>
             <textarea v-model="taskDescription" placeholder="Describe your task" class="form-control"></textarea>
             <div class="foot">
                 <input type="date" v-model="taskDueDate" class="calendar">
-                <button type="submit">Create Task</button>
+                <button type="submit">Update Task</button>
             </div>
         </form>
     </div>
@@ -15,29 +15,24 @@
 </template>
 
 <script>
-import DateMixin from '../mixins/dateMixin.js';
-
 export default {
-    mixins: [DateMixin],
+    props: {
+        isVisible: Boolean,
+        task: Object
+    },
 
     data() {
         return {
-        taskName: '',
-        taskDescription: '',
-        taskDueDate: '',
-        tasks: []
-        }
+            taskName: this.task ? this.task.name : '',
+            taskDescription: this.task ? this.task.description : '',
+            taskDueDate: this.task ? this.task.dueDate : ''
+        };
     },
-
-    props: {
-        isVisible: {
-            type: Boolean,
-            default: false
-        },
-        taskCount: {
-            type: Number,
-            default: 0,
-            required: true
+    mounted() {
+        if (this.selectedTask) {
+            this.taskName = this.selectedTask.name;
+            this.taskDescription = this.selectedTask.description;
+            this.taskDueDate = this.selectedTask.dueDate;
         }
     },
 
@@ -45,29 +40,37 @@ export default {
         closeModal() {
             this.$emit('update:isVisible', false);
         },
+
         submitTask() {
-            const newId = this.taskCount + 1;
-            const task = {
-                id: newId,
-                name: this.taskName.trim(),
-                description: this.taskDescription.trim(),
-                dueDate: this.taskDueDate,
-                status: '⦁︎ Idle'
-            };
-
-            this.$emit('task-created', task, newId);
-            this.taskName = '';
-            this.taskDescription = '';
-            this.taskDueDate = '';
-            this.closeModal();
+            if (this.task) {
+                const updatedTask = {
+                    ...this.task,  // Make sure this references the correct prop
+                    name: this.taskName.trim(),
+                    description: this.taskDescription.trim(),
+                    dueDate: this.taskDueDate
+                };
+                console.log("Emitting task-updated with:", updatedTask);  // Debugging
+                this.$emit('task-updated', updatedTask);
+                this.closeModal();
+            } else {
+                console.error("No task data available to update.");
+            }
         }
     },
 
-    computed: {
-    formattedDueDate() {
-        return this.taskDueDate ? this.formatDate(this.taskDueDate) : '';
+    watch: {
+        task: {
+            deep: true,
+            immediate: true,
+            handler(newVal) {
+                if (newVal) {
+                    this.taskName = newVal.name;
+                    this.taskDescription = newVal.description;
+                    this.taskDueDate = newVal.dueDate;
+                }
+            }
         }
-    },
+    }
 };
 </script>
 

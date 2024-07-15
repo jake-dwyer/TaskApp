@@ -16,7 +16,7 @@
     <tr v-for="task in filteredTasks" :key="task.id" >
       <th style="width: 240px">
         <!-- On task name click call editTask -->
-        <span class="pointer">
+        <span class="taskName" @click="openEditModal(task)"> 
           {{ task.name }}
         </span>
       </th>
@@ -50,14 +50,16 @@
   <div class="d-flex">
     <button @click="showModal = true">+ Create a new task</button>
     <create-task :isVisible="showModal" :taskCount="taskCount" @update:isVisible="showModal = $event" @task-created="addTask"></create-task>
+    <edit-task :isVisible="showEditModal" :task="selectedTask" @update:isVisible="showEditModal = $event" @task-updated="updateTask"></edit-task>
   </div>
 </div>
 </template>
 
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 import CreateTask from './CreateTask.vue';
+import EditTask from './EditTask.vue';
 import DateMixin from '../mixins/dateMixin.js';
 import SortDueDate from '../mixins/sortDueDateMixin.js'
 
@@ -65,12 +67,15 @@ export default {
   mixins: [DateMixin, SortDueDate],
 
   components: {
-    CreateTask
+    CreateTask,
+    'edit-task': EditTask
   },
 
   data() {
     return {
       showModal: false,
+      showEditModal: false,
+      selectedTask: null,
       dueDateFilter: '',
       sortAscending: true
     };
@@ -103,8 +108,14 @@ export default {
     handleDueDateSort() {
       this.sortedTasks = this.sortTasksByDueDate(this.sortedTasks);
     },
-    editTask(task) {
-      // Logic for editing a task
+    openEditModal(task) {
+      this.selectedTask = task;
+      this.showEditModal = true;
+    },
+    updateTask(updatedTask) {
+        console.log("Updating task in Vuex:", updatedTask);
+        this.$store.commit('updateTask', updatedTask);
+        this.showEditModal = false;
     },
     updateStatus(task) {
       this.updateTaskStatus({ taskId: task.id, newStatus: task.status });
@@ -144,9 +155,19 @@ export default {
 
 .labels {
   color: var(--color-text-secondary);
-  font-family: 'Helvetica Neue';
   font-size: 14px;
   font-weight: 500;
+}
+
+.taskName {
+  cursor: pointer;
+  padding: 4px 4px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.taskName:hover {
+  background-color: var(--color-grid-lines);
 }
 
 span {

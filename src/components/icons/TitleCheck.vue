@@ -6,7 +6,7 @@
 </template>
 
 <style scoped>
-@import 'src/assets/base.css';
+@import '../../assets/base.css';
 
 svg {
     fill: var(--color-text-secondary);
