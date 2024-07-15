@@ -12,7 +12,7 @@
     </tr>
   </thead>
   <tbody>
-    <!-- For loop to render taks in table based on selected view. -->
+    <!-- For loop to render tasks in table based on selected view. -->
     <tr v-for="task in filteredTasks" :key="task.id" >
       <th style="width: 240px">
         <!-- On task name click call editTask -->
@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import Trash from './icons/Trash.vue';
+  import Trash from './icons/Trash.vue';
 </script>
 
 <script>
@@ -135,6 +135,7 @@ export default {
 
   mounted() {
     this.$store.dispatch('fetchTasks');
+    console.log('You can view the source code here: https://github.com/jake-dwyer/TaskApp')
     console.log('Tasks to render:', this.filteredTasks);
   }
 };
