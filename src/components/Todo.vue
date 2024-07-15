@@ -38,7 +38,9 @@
       <td style="width: 120px">
         <!-- On Trash icon click call delete task. -->
         <div class="text-center" @click="deleteTask(task.id)">
-          <span class="fa fa-trash"></span>
+          <span>
+            <Trash />
+          </span>
         </div>
       </td>
     </tr>
@@ -55,6 +57,9 @@
 </div>
 </template>
 
+<script setup>
+import Trash from './icons/Trash.vue';
+</script>
 
 <script>
 import { mapMutations, mapState } from 'vuex';
@@ -241,10 +246,31 @@ button {
   button {
     padding: 12px 24px;
     font-weight: 500;
+    margin-bottom: 20px;
   }
 
   select {
     padding: 1.5px 4px 1.5px 4px;
+  }
+
+  .table th:nth-child(1), 
+  .table td:nth-child(1) {
+    width: 50%;
+  }
+
+  .table th:nth-child(2), 
+  .table td:nth-child(2) {
+    width: 15%;
+  }
+
+  .table th:nth-child(3),  
+  .table td:nth-child(3) {
+    width: 25%;
+  }
+
+  .table th:nth-child(4), 
+  .table td:nth-child(4) {
+    width: 10%;
   }
 }
 </style>

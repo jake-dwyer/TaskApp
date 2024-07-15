@@ -1,7 +1,7 @@
 <template>
   <div :class="$store.state.theme">
     <header>
-      <Title msg="To-do" />
+      <Title msg="Tasks" />
     </header>
     <Nav />
     <router-view :key="$route.fullPath" />
