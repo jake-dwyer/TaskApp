@@ -37,7 +37,7 @@
       </td>
       <td style="width: 120px">
         <!-- On Trash icon click call delete task. -->
-        <div class="text-center" @click="deleteTask(task.id)">
+        <div class="text-center pointer" @click="deleteTask(task.id)">
           <span>
             <Trash />
           </span>
