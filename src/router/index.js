@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import TodoView from '../components/Todo.vue';
+import Settings from '../components/Settings.vue';
 
 // Route Configs
 const routes = [
@@ -8,7 +9,8 @@ const routes = [
   // Route for '/in-progress', renders the TodoView component with a status filter of 'In progress'
   { path: '/in-progress', component: TodoView, props: { statusFilter: 'In progress' } },
   // Route for '/complete', renders the TodoView component with a status filter of 'Complete'
-  { path: '/complete', component: TodoView, props: { statusFilter: 'Complete' } }
+  { path: '/complete', component: TodoView, props: { statusFilter: 'Complete' } },
+  { path: '/settings', component: Settings}
 ];
 
 const router = createRouter({

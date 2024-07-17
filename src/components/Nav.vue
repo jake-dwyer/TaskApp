@@ -12,11 +12,15 @@
         <li class="nav-item">
           <router-link to="/complete" class="nav-link" active-class="active-link">Complete</router-link>
         </li>
+        <li class="nav-item">
+          <router-link to="/settings" class="nav-link" active-class="active-link">Settings</router-link>
+        </li>
       </ul>
     </nav>
 </template>
 
 <style scoped>
+@import '../assets/base.css';
 li {
   display: inline;
 }
@@ -29,8 +33,8 @@ li {
 .nav {
   list-style-type: none;
   display: flex;
-  --bs-nav-link-color: var(--text-primary);
-  --bs-nav-link-hover-color: var(--text-primary);
+  --bs-nav-link-color: var(--color-text-primary);
+  --bs-nav-link-hover-color: var(--color-text-primary);
 }
 
 .nav-item {
@@ -39,13 +43,37 @@ li {
 
 .nav-link {
   text-decoration: none;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   cursor: pointer;
   font-size: 16px;
   }
 
 .active-link {
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    margin-left: 0;
+    justify-content: center;
+  }
+
+  .nav {
+    flex-direction: flex;
+    align-items: center; 
+  }
+
+  .nav-item {
+    margin: 0.5rem 0; 
+  }
+
+  .nav-link {
+    font-size: 14px;
+    padding: 1rem; 
+  }
+  .active-link {
+  font-weight: 500;
+  }
 }
 </style>

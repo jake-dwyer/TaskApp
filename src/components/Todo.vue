@@ -7,34 +7,40 @@
     <!-- Column Heads -->
       <th scope="col" class="labels">Task</th>
       <th scope="col" class="labels">Status</th>
-      <th scope="col" class="labels text-center">#</th>
+      <th scope="col" class="labels" @click="handleDueDateSort">Due</th>
+      <th scope="col" class="labels text-center"></th>
     </tr>
   </thead>
   <tbody>
-    <!-- For loop to render taks in table based on selected view. -->
-    <tr v-for="task in filteredTasks" :key="task.id">
+    <!-- For loop to render tasks in table based on selected view. -->
+    <tr v-for="task in filteredTasks" :key="task.id" >
       <th style="width: 240px">
         <!-- On task name click call editTask -->
-        <span class="pointer" @click="editTask(task)">
+        <span class="taskName" @click="openEditModal(task)"> 
           {{ task.name }}
         </span>
       </th>
-      <td style="width: 124px">
-        <!-- On task status click call updateStatus -->
-        <span class="pointer" @click="updateStatus(task)">
-          <!-- Realistically <text> should be changed. -->
-          <!-- Categorizing status based on task.status. If task.status is 'InProgress', then we render 'In progress'. -->
-          <text :class="{'complete' : task.status === '⦁︎ Complete',
-                         'idle' : task.status === '⦁︎ Idle',
-                         'inProgress' : task.status === '⦁︎ In progress'}">
-            {{ task.status }}
-          </text>
+      <td style="width: 240px">
+        <select v-model="task.status" @change="updateStatus(task)" 
+                  :class="{'complete' : task.status === '⦁︎ Complete',
+                          'idle' : task.status === '⦁︎ Idle',
+                          'inProgress' : task.status === '⦁︎ In progress'}">
+            <option value="⦁︎ Idle">⦁︎ Idle</option>
+            <option value="⦁︎ In progress">⦁︎ In progress</option>
+            <option value="⦁︎ Complete">⦁︎ Complete</option>
+        </select>
+      </td>
+      <td style="width: 240px">
+        <span class="dueDate">
+        {{ formatDate(task.dueDate) }}
         </span>
       </td>
-      <td>
+      <td style="width: 120px">
         <!-- On Trash icon click call delete task. -->
-        <div class="text-center" @click="deleteTask(task)">
-          <span class="fa fa-trash"></span>
+        <div class="text-center pointer" @click="deleteTask(task.id)">
+          <span>
+            <Trash />
+          </span>
         </div>
       </td>
     </tr>
@@ -44,147 +50,163 @@
 
 <div class="textField">
   <div class="d-flex">
-    <!-- Binds the input to the 'task' data property. On Enter key press, call submit. -->
-    <input v-model="task" type="text" placeholder="+ Create a new task" class="form-control" @keyup.enter="submit">
+    <button @click="showModal = true">+ Create a new task</button>
+    <create-task :isVisible="showModal" :taskCount="taskCount" @update:isVisible="showModal = $event" @task-created="addTask"></create-task>
+    <edit-task :isVisible="showEditModal" :task="selectedTask" @update:isVisible="showEditModal = $event" @task-updated="updateTask"></edit-task>
   </div>
 </div>
 </template>
 
+<script setup>
+  import Trash from './icons/Trash.vue';
+</script>
 
 <script>
+import { mapMutations, mapState } from 'vuex';
+import CreateTask from './CreateTask.vue';
+import EditTask from './EditTask.vue';
+import DateMixin from '../mixins/dateMixin.js';
+import SortDueDate from '../mixins/sortDueDateMixin.js'
+
 export default {
-  // Define data properties
+  mixins: [DateMixin, SortDueDate],
+
+  components: {
+    CreateTask,
+    'edit-task': EditTask
+  },
+
   data() {
     return {
-      task: '',
-      // On click of a created task name, this will populate to modify the task name. 
-      editedTask: null,
-      // On click of created task status, we increment to the following task based on index in the 'statusOptions' array.
-      selectedStatus: '',
-      statusOptions: ['⦁︎ Idle', '⦁︎ In progress', '⦁︎ Complete'],
-      // Instead of selecting tasks by index, we assign it an 'id' based on when it is created. 
-      taskCount: 0,
-      tasks: []
+      showModal: false,
+      showEditModal: false,
+      selectedTask: null,
+      dueDateFilter: '',
+      sortAscending: true
+    };
+  },
+
+  props: {
+    statusFilter: String
+  },
+
+  watch: {
+    taskCount(newCount) {
+      localStorage.setItem('taskCount', newCount.toString());
     }
   },
 
-  created() {
-    // Initialize the tasks array by loading saved tasks from localStorage, or set to an empty array if no tasks are found.
-    this.tasks = JSON.parse(localStorage.getItem('tasks')) || [];  
-    this.taskCount = localStorage.getItem('taskCount') || 0;
-  },
-
-watch: {
-  tasks: {
-    handler(newTasks) {
-      localStorage.setItem('tasks', JSON.stringify(newTasks));
-    },
-    deep: true
-  },
-  taskCount(newCount) {
-    localStorage.setItem('taskCount', newCount.toString());
-  }
-},
-
-  props: {
-    // Used to filter tasks, expects a string. 
-    statusFilter: String
-  },
-  
   computed: {
-    // A computed property that filters the tasks based on the statusFilter prop.
-    // If a statusFilter is provided, it returns only the tasks that match the filter.
-    // If no statusFilter is provided, it returns all tasks.
+    ...mapState(['taskCount']),
     filteredTasks() {
-      if (this.statusFilter) {
-        return this.tasks.filter(task => task.status === this.statusFilter);
-      }
-      return this.tasks;
+      let tasks = this.$store.getters.filteredTasks(this.statusFilter);
+      return this.sortTasksByDueDate(tasks, this.sortAscending);
     }
   },
 
   methods: {
-    submit() {
-      // If there is no input return nothing.
-      if (this.task.trim().length === 0) return;
-
-      // If the user is not editing a task, create a new task, increment the counter and set the status to idle by default. 
-      if (this.editedTask === null) {
-        this.tasks.push({
-          id: ++this.taskCount,
-          name: this.task.trim(),
-          status: '⦁︎ Idle'
-        });
-
-        // If the user clicks on an existing task, we instead find the task they are looking to edit and change the name based on input.
-      } else {
-        const task = this.tasks.find(t => t.id === this.editedTask.id);
-        if (task) task.name = this.task.trim();
-        this.editedTask = null;
-      }
-
-      this.task = '';
+    ...mapMutations([
+      'addTask', 
+      'deleteTask',
+      'updateTaskStatus'
+    ]),
+    handleDueDateSort() {
+      this.sortedTasks = this.sortTasksByDueDate(this.sortedTasks);
     },
-
-    // Find the task by task.id and filter it out. 
-    deleteTask(toDelete) {
-      this.tasks = this.tasks.filter(task => task.id !== toDelete.id);
+    openEditModal(task) {
+      this.selectedTask = task;
+      this.showEditModal = true;
     },
-
-    // Edit the task by setting the input field to the task's name and setting the editedTask to the task to be edited.
-    editTask(toEdit) {
-      this.task = toEdit.name;
-      this.editedTask = toEdit;
+    updateTask(updatedTask) {
+        console.log("Updating task in Vuex:", updatedTask);
+        this.$store.commit('updateTask', updatedTask);
+        this.showEditModal = false;
     },
+    updateStatus(task) {
+      this.updateTaskStatus({ taskId: task.id, newStatus: task.status });
+      this.$store.dispatch('saveTasks');
+    },
+    getNextStatus(currentStatus) {
+      const statuses = ['⦁︎ Complete', '⦁︎ Idle', '⦁︎ In progress'];
+      let index = statuses.indexOf(currentStatus);
+      return statuses[(index + 1) % statuses.length];
+    }
+  },
 
-    // Update the status of the task by finding it and cycling to the next status in the statusOptions array.
-    // I would like to change this process to a dropdown instead. 
-    updateStatus(toUpdate) {
-    let task = this.tasks.find(t => t.id === toUpdate.id);
-    if (task) {
-    let newIndex = this.statusOptions.indexOf(task.status);
-    newIndex = (newIndex + 1) % this.statusOptions.length;
-    task.status = this.statusOptions[newIndex];
-    console.log(`Updated Status of task: ${task.name} to status of: ${task.status}`);
-  }
-},
+  mounted() {
+    this.$store.dispatch('fetchTasks');
+    console.log('You can view the source code here: https://github.com/jake-dwyer/TaskApp')
+    console.log('Tasks to render:', this.filteredTasks);
   }
 };
 </script>
 
 <style scoped>
+@import '../assets/base.css';
 
 .tablePosition {
   margin-left: 8.75rem;
   margin-right: 8.75rem;
 }
 
+.table {
+  background-color: var(--color-background);
+  border-color: var(--color-grid-lines);
+}
+
+.table th, .table td {
+  background-color: inherit;
+  border-color: var(--color-grid-lines);
+}
+
 .labels {
-  color: var(--text-secondary);
-  font-family: 'Helvetica Neue';
+  color: var(--color-text-secondary);
   font-size: 14px;
   font-weight: 500;
 }
 
-.idle {
-  color: var(--text-idle);
+.taskName {
+  cursor: pointer;
+  padding: 4px 4px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.taskName:hover {
+  background-color: var(--color-grid-lines);
+}
+
+span {
+  color: var(--color-text-primary);
+}
+
+select {
+  appearance: none;
+  border: none;
+  border-radius: 4px;
   padding: 1.5px 4px 1.5px 4px;
-  background-color: var(--highlight-idle);
-  border-radius: 4px
+  font-size: 14px;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+
+.idle {
+  color: var(--color-text-idle);
+  background-color: var(--color-highlight-idle);
 }
 
 .inProgress {
-  color: var(--text-progress);
-  padding: 1.5px 4px 1.5px 4px;
-  background-color: var(--highlight-progress);
-  border-radius: 4px
+  color: var(--color-text-progress);
+  background-color: var(--color-highlight-progress);
 }
 
 .complete {
-  color: var(--text-complete);
-  padding: 1.5px 4px 1.5px 4px;
-  background-color: var(--highlight-complete);
-  border-radius: 4px
+  color: var(--color-text-complete);
+  background-color: var(--color-highlight-complete);
+}
+
+.dueDate {
+  font-size: 14px;
 }
 
 .textField {
@@ -192,23 +214,64 @@ watch: {
   margin-right: 8.75rem;
 }
 
-input {
+button {
+  color: var(--color-text-CTA);
+  font-weight: 600;
+  background-color: var(--color-background);
   border: none;
-  transition: none;
-  background-color: none;
-}
-
-input:focus {
-  border-color: none;
-  box-shadow: none;
-}
-
-input::placeholder {
-    color: var(--text-CTA);
-    font-weight: 500
 }
 
 .pointer {
   cursor: pointer;
+}
+
+@media (max-width: 776px) {
+  .tablePosition {
+    max-width: 90%;
+    margin: auto;
+  }
+
+  .table, .table th, .table td {
+    font-size: 14px;
+  }
+
+  .labels {
+    font-size: 12px;
+  }
+
+  .textField {
+    margin-left: 1rem; 
+    margin-right: 1rem;
+  }
+
+  button {
+    padding: 12px 24px;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+
+  select {
+    padding: 1.5px 4px 1.5px 4px;
+  }
+
+  .table th:nth-child(1), 
+  .table td:nth-child(1) {
+    width: 50%;
+  }
+
+  .table th:nth-child(2), 
+  .table td:nth-child(2) {
+    width: 15%;
+  }
+
+  .table th:nth-child(3),  
+  .table td:nth-child(3) {
+    width: 25%;
+  }
+
+  .table th:nth-child(4), 
+  .table td:nth-child(4) {
+    width: 10%;
+  }
 }
 </style>

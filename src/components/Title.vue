@@ -18,6 +18,7 @@ defineProps({
 </script>
 
 <style scoped>
+@import '../assets/base.css';
 .heading {
     display: flex;
     align-items: center;
@@ -27,10 +28,22 @@ defineProps({
 }
 
 h1 {
-  color: var(--text-primary);
-  font-size: 32px;
-  font-weight: 600;
-  margin-top: 6px;
-}
+    color: var(--color-text-primary);
+    font-size: 32px;
+    font-weight: 600;
+    margin-top: 6px;
+  }
 
+@media (max-width: 768px) {
+    .heading {
+        margin-left: 0;
+        justify-content: center;
+        margin-top: 2rem; 
+    }
+
+    h1 {
+        font-size: 28px;
+        text-align: center;
+    }
+}
 </style>

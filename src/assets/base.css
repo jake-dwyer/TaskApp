@@ -1,44 +1,96 @@
-
 :root {
-  --white: #ffffff;
-  --divider-gray: #e9e9e7;
-  --text-secondary: #83827F;
-  --text-primary: #36352F;
+  --light-background: #ffffff;
+  --light-grid-lines: #e9e9e7;
+  --light-text-primary: #36352F;
+  --light-text-secondary: #83827F;
 
-  --highlight-idle: #E3E2E0;
+  --light-highlight-idle: #E3E2E0;
+  --light-circle-idle: #83827F;
+  --light-text-idle: #36352F;
 
-  --highlight-progress: #FADEC9;
-  --circle-progress: #D8833D;
-  --text-progress: #4A280F;
+  --light-highlight-progress: #FADEC9;
+  --light-circle-progress: #D8833D;
+  --light-text-progress: #4A280F;
 
-  --highlight-complete: #DBEDDB;
-  --circle-complete: #6C9B7D;
-  --text-complete: #1D3829;
+  --light-highlight-complete: #DBEDDB;
+  --light-circle-complete: #6C9B7D;
+  --light-text-complete: #1D3829;
 
-  --text-CTA: #2483E2;
+  --light-text-CTA: #2483E2;
 
-  --color-background: var(white);
-  --color-border: var(--divider-gray);
-  --color-heading: var(--text-primary);
+
+
+  --dark-background: #181818;
+  --dark-grid-lines: #292929;
+  --dark-text-primary: #D3D3D3;
+  --dark-text-secondary: #7B7B7B;
+
+  --dark-highlight-idle: #505050;
+  --dark-circle-idle: #909090;
+  --dark-text-idle: #DDDDDD;
+
+  --dark-highlight-progress: #794221;
+  --dark-circle-progress: #D2692C;
+  --dark-text-progress: #DBCEC6;
+
+  --dark-highlight-complete: #274F39;
+  --dark-circle-complete: #2B8E5C;
+  --dark-text-complete: #D5DCD8;
+
+  --dark-text-CTA: #2483E2;
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: var(--vt-c-black);
-    --color-background-soft: var(--vt-c-black-soft);
-    --color-background-mute: var(--vt-c-black-mute);
+/* Light theme specific variables */
+.light {
+  --color-background: var(--light-background);
+  --color-grid-lines: var(--light-grid-lines);
+  --color-text-primary: var(--light-text-primary);
+  --color-text-secondary: var(--light-text-secondary);
 
-    --color-border: var(--vt-c-divider-dark-2);
-    --color-border-hover: var(--vt-c-divider-dark-1);
+  --color-highlight-idle: var(--light-highlight-idle);
+  --color-circle-idle: var(--light-circle-idle);
+  --color-text-idle: var(--light-text-idle);
 
-    --color-heading: var(--vt-c-text-dark-1);
-    --color-text: var(--vt-c-text-dark-2);
-  }
-} */
+  --color-highlight-progress: var(--light-highlight-progress);
+  --color-circle-progress: var(--light-circle-progress);
+  --color-text-progress: var(--light-text-progress);
+
+  --color-highlight-complete: var(--light-highlight-complete);
+  --color-circle-complete: var(--light-circle-complete);
+  --color-text-complete: var(--light-text-complete);
+
+  --color-text-CTA: var(--light-text-CTA);
+}
+
+/* Dark theme specific variables */
+.dark {
+  --color-background: var(--dark-background);
+  --color-grid-lines: var(--dark-grid-lines);
+  --color-text-primary: var(--dark-text-primary);
+  --color-text-secondary: var(--dark-text-secondary);
+
+  --color-highlight-idle: var(--dark-highlight-idle);
+  --color-circle-idle: var(--dark-circle-idle);
+  --color-text-idle: var(--dark-text-idle);
+
+  --color-highlight-progress: var(--dark-highlight-progress);
+  --color-circle-progress: var(--dark-circle-progress);
+  --color-text-progress: var(--dark-text-progress);
+
+  --color-highlight-complete: var(--dark-highlight-complete);
+  --color-circle-complete: var(--dark-circle-complete);
+  --color-text-complete: var(--dark-text-complete);
+
+  --color-text-CTA: var(--dark-text-CTA);
+
+  --transition-duration: 0s;
+}
+
 
 @font-face {
   font-family: 'SF Pro';
   src: url(../assets/SF-Pro.ttf);
+  font-display: swap;
 }
 
 /* Global Styling */
@@ -49,17 +101,30 @@
   margin: 0;
   padding: 0;
   font-weight: 500;
-  font-family: 'SF Pro';
+  font-family: 'SF Pro', sans-serif;
   letter-spacing: -.4px;
+  background-color: var(--color-background);
+  transition: background-color var(--transition-duration), color var(--transition-duration);
 }
 
 body {
   min-height: 100vh;
-  color: var(--color-text, var(--text-secondary));
-  background: var(--color-background);
-  transition: color 0.5s, background-color 0.5s;
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
+  border-color: var(--color-grid-lines);
+  transition: color 0s, background-color 0s;
   line-height: 1.5;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+body, html {
+  max-width: 100vw; /* Ensures that the body does not exceed the width of the viewport */
+  overflow-x: hidden; /* Hides horizontal overflow */
+}
+
+body, button, input, textarea {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
 }
